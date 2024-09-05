@@ -35,6 +35,15 @@ public class JobController {
         }
         return ResponseEntity.ok(job);
     }
+
+    @DeleteMapping ("/jobs/{id}")
+    public ResponseEntity<String> deleteJobById(@PathVariable Long id) {
+        boolean deleted = jobService.deleteJobById(id);
+        if (deleted) {
+            return new ResponseEntity<>("Job is deleted successfully", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
 
 /*
@@ -43,7 +52,7 @@ GET /jobs: Get all jobs - done
 GET /jobs/{id}: Get a specific job by ID - done
 POST /jobs: Create a new job (request body should contain the job details) - done
 DELETE/jobs/{id}: Delete a specific job by IDI
-PUT /jobs/{id}: Update a specific job by ID (request body should contain the updated job
+PUT /jobs/{id}: Update a specific job by ID (request body should contain the updated job)
 
 Example API URLS:
 GET {base_url}/jobs
