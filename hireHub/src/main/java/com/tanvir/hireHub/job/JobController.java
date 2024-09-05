@@ -1,6 +1,9 @@
 package com.tanvir.hireHub.job;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -13,18 +16,39 @@ public class JobController {
     }
 
     @GetMapping("/jobs")
-    public List<Job> getAllJobs() {
-        return jobService.findAll();
+    public ResponseEntity<List<Job>> getAllJobs() {
+        return ResponseEntity.ok(jobService.findAll());
     }
 
     @PostMapping("/jobs")
-    public String createJob(@RequestBody Job job) {
+    public ResponseEntity<String> createJob(@RequestBody Job job) {
         jobService.createJob(job);
-        return "Job is created successfully";
+        return new ResponseEntity<>("Job is created successfully", HttpStatus.CREATED);
     }
 
     @GetMapping("/jobs/{id}")
-    public Job findJobById(@PathVariable Long id) {
-        return jobService.getJobById(id);
+    public ResponseEntity<Job> findJobById(@PathVariable Long id) {
+        Job job = jobService.getJobById(id);
+
+        if (job == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(job);
     }
 }
+
+/*
+
+GET /jobs: Get all jobs - done
+GET /jobs/{id}: Get a specific job by ID - done
+POST /jobs: Create a new job (request body should contain the job details) - done
+DELETE/jobs/{id}: Delete a specific job by IDI
+PUT /jobs/{id}: Update a specific job by ID (request body should contain the updated job
+
+Example API URLS:
+GET {base_url}/jobs
+GET {base_url}/jobs/1
+POST {base_url}/jobs
+DELETE {base_url}/jobs/1
+PUT {base_url}/jobs/1
+ */
