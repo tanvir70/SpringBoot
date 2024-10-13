@@ -1,5 +1,6 @@
 package com.tanvir.hireHub.job;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +10,11 @@ import java.util.List;
 
 @RestController
 public class JobController {
+
     private JobService jobService;
 
     public JobController(JobService jobService) {
-        this.jobService = jobService;
+       this.jobService = jobService;
     }
 
     @GetMapping("/jobs")
@@ -41,6 +43,17 @@ public class JobController {
         boolean deleted = jobService.deleteJobById(id);
         if (deleted) {
             return new ResponseEntity<>("Job is deleted successfully", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/jobs/{id}")
+    public ResponseEntity<String> updateJob(@PathVariable Long id, @RequestBody Job updatedJob) { 
+
+        boolean updated = jobService.updateJob(id, updatedJob);
+
+        if (updated) {
+            return new ResponseEntity<>("Job is updated successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
